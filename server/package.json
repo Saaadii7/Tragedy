@@ -1,0 +1,46 @@
+{
+    "name": "tragedy",
+    "version": "1.0.0",
+    "description": "",
+    "main": "run.js",
+    "private": true,
+    "scripts": {
+        "start": "nodemon run.js",
+        "postinstall": "yarn install --ignore-scripts"
+    },
+    "repository": "git+ssh://git@github.com:saadii7/Tragedy.git",
+    "author": "Saaad Mahmood",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/saadii7/tradegy/issues"
+    },
+    "engines": {
+        "node": "10.16.0"
+    },
+    "homepage": "https://github.com/saadii7/tradegy#readme",
+    "dependencies": {
+        "awilix": "4.2.2",
+        "awilix-express": "2.1.1",
+        "body-parser": "^1.19.0",
+        "compression": "1.7.4",
+        "cookie-session": "1.3.3",
+        "cors": "^2.8.5",
+        "dotenv": "^8.1.0",
+        "express": "^4.17.1",
+        "express-jwt": "5.3.1",
+        "express-rate-limit": "5.0.0",
+        "express-status-monitor": "1.2.6",
+        "helmet": "3.21.0",
+        "http-status": "1.3.2",
+        "log4js": "5.1.0",
+        "method-override": "3.0.0",
+        "morgan": "1.9.1",
+        "nodemon": "^1.19.2",
+        "passport": "0.4.0",
+        "pg": "7.12.1",
+        "ramda": "0.26.1",
+        "sequelize": "5.18.4",
+        "socket.io": "2.2.0",
+        "swagger-ui-express": "4.1.1"
+    }
+}
