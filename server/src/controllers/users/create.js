@@ -2,20 +2,16 @@ const router = require('express').Router();
 const { makeInvoker } = require('awilix-express');
 const auth = require('../auth');
 
-// router.get('/', auth.optional, function(req, res, next) {
-//     return res.json([]);
-// });
-
 const api = makeInvoker(({ userService, httpStatus, userMapper }) => {
     return {
         index: async (req, res) => {
-            let users = await userService.all();
+            let obj = req.body;
             return res
                 .status(httpStatus.CREATED)
-                .send(userMapper.mapAll(await userService.all()));
+                .send(userMapper.map(await userService.create(obj)));
         }
     };
 });
 
-router.get('/', auth.optional, api('index'));
+router.post('/', auth.optional, api('index'));
 module.exports = router;

@@ -17,7 +17,7 @@ const apiLimiter = rateLimit({
         'Too many accounts created from this IP, please try again after an hour'
 });
 
-module.exports = ({ models, logger, router }) => {
+module.exports = ({ db, logger, router }) => {
     const app = new express();
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
@@ -36,11 +36,10 @@ module.exports = ({ models, logger, router }) => {
 
     app.use(passport.initialize());
     app.use(passport.session());
-
+    app.disable('x-powered-by');
     app.use(router);
-
-    if (models && models.options.logging) {
-        models.options.logging = logger.info.bind(logger);
+    if (db && db.options && db.options.logging) {
+        // db.options.logging = logger.info.bind(logger);
     }
 
     return app;

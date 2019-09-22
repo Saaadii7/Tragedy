@@ -2,7 +2,7 @@ const ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
   config: 'config/database.js',
-  'migrations-path': 'src/migrations',
-  'models-path': 'src/models',
-  'seeders-path': 'src/seeders'
+  'migrations-path': './src/migrations',
+  'models-path': './src/models',
+  'seeders-path': './src/seeders'
 };

@@ -1,18 +1,7 @@
 const router = require('express').Router();
-router.use('/all', require('./all'));
 
-router.use(function(err, req, res, next) {
-    if (err.name === 'ValidationError') {
-        return res.status(422).json({
-            errors: Object.keys(err.errors).reduce(function(errors, key) {
-                errors[key] = err.errors[key].message;
-
-                return errors;
-            }, {})
-        });
-    }
-
-    return next(err);
-});
+router.get('/', require('./all'));
+router.post('/', require('./create'));
+router.get('/:id', require('./get'));
 
 module.exports = router;

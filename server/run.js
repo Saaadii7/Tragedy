@@ -1,12 +1,12 @@
 const container = require('./container');
 
-const models = container.resolve('models');
+const db = container.resolve('db');
 const server = container.resolve('server');
 const app = container.resolve('app');
 
 async function preProcess() {
-    if (models) {
-        await models.authenticate();
+    if (db) {
+        await db.authenticate();
     }
 }
 preProcess();

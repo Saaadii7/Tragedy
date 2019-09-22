@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const httpStatus = require('http-status');
 const statusMonitor = require('express-status-monitor');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -14,7 +13,8 @@ module.exports = ({
     containerMiddleware,
     loggerMiddleware,
     errorHandler,
-    swaggerMiddleware
+    swaggerMiddleware,
+    httpStatus
 }) => {
     const router = Router();
     if (config.env === 'development') {
@@ -47,7 +47,21 @@ module.exports = ({
 
     router.use('/users', require('./users'));
 
-    router.get(['*'], async (req, res) => {
+    router.use(function(err, req, res, next) {
+        let errors = {};
+        errors[err.name] = errors[err.name] || [];
+        errors[err.name].push(err.message);
+        if (err && err.errors && err.errors.length > 0) {
+            err.errors.map(errorObj => {
+                errors[errorObj.name] = errors[errorObj.name] || [];
+                errors[errorObj.name].push(err.message);
+            });
+        }
+        delete errors['undefined'];
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json(errors);
+        return next(err);
+    });
+    router.use(['*'], async (req, res) => {
         let data = {
             code: 400,
             message: `Requested Route not found ${req.path}`

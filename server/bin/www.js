@@ -27,31 +27,16 @@ class Server {
 
 module.exports = Server;
 
-// const app = require('../app');
-
-// let port = webSettings.port;
-// console.log('Server starting on port: ', port);
-// app.set('port', port);
-
-// const server = http.createServer(app);
-// const io = require('socket.io')(server);
-// app.set('io', io);
-// process.io = io;
-
-// server.listen(port);
-// server.on('error', onError);
-// server.on('listening', onListening);
-
 function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    let addr = server.address();
+    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
     }
-    var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+    let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
