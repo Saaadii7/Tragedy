@@ -2,9 +2,11 @@ const _ = require('lodash');
 
 class userMapper {
     constructor({}) {
-        this.methods = ['name'];
+        this.methods = [];
         this.short = [
             'id',
+            'name',
+            'age',
             'email',
             'dob',
             'phone',

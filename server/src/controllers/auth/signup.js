@@ -3,7 +3,7 @@ const { makeInvoker } = require('awilix-express');
 const auth = require('../verifyToken');
 
 const api = makeInvoker(
-    ({ userService, userSchema, userMapper, httpStatus }) => {
+    ({ userService, httpStatus, userMapper, userSchema }) => {
         return {
             index: async (req, res) => {
                 let obj = req.body;
@@ -11,18 +11,13 @@ const api = makeInvoker(
                 if (error) {
                     throw new Error(error);
                 }
-                try {
-                    let user = await userService.create(value);
-                    return res
-                        .status(httpStatus.CREATED)
-                        .send(userMapper.map(user));
-                } catch (err) {
-                    throw err;
-                }
+                return res
+                    .status(httpStatus.CREATED)
+                    .send(userMapper.map(await userService.create(value)));
             }
         };
     }
 );
 
-router.post('/', auth.optional, api('index'));
+router.post('/signup', auth.optional, api('index'));
 module.exports = router;

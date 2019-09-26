@@ -46,20 +46,23 @@ module.exports = ({
     });
 
     router.use('/users', require('./users'));
+    router.use('/auth', require('./auth'));
 
     router.use(function(err, req, res, next) {
         let errors = {};
         errors[err.name] = errors[err.name] || [];
         errors[err.name].push(err.message);
         if (err && err.errors && err.errors.length > 0) {
+            errors = {};
             err.errors.map(errorObj => {
-                errors[errorObj.name] = errors[errorObj.name] || [];
-                errors[errorObj.name].push(err.message);
+                errors[errorObj.name || errorObj.type] =
+                    errors[errorObj.name || errorObj.type] || [];
+                errors[errorObj.name || errorObj.type].push(errorObj.message);
             });
         }
         delete errors['undefined'];
         res.status(httpStatus.INTERNAL_SERVER_ERROR).json(errors);
-        return next(err);
+        return next(errors);
     });
     router.use(['*'], async (req, res) => {
         let data = {

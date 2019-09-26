@@ -13,6 +13,7 @@ const app = require('./app');
 const server = require('./bin/www');
 const router = require('./src/controllers/index');
 const io = require('./utils/socket-io');
+const passportStrategy = require('./utils/local-strategy');
 
 const { database, ...models } = require('./connection');
 
@@ -41,6 +42,8 @@ container
         models: asValue(models),
         httpStatus: asValue(httpStatus),
         db: asValue(database),
+        user: asValue({}),
+        passportStrategy: asValue(passportStrategy),
         containerMiddleware: asValue(scopePerRequest(container)),
         swaggerMiddleware: asValue([swaggerMiddleware]),
         errorHandler: asValue(
@@ -50,7 +53,8 @@ container
     .loadModules(
         [
             ['src/services/*.js', { register: asClass }, Lifetime.SCOPED],
-            ['src/mappers/*.js', { register: asClass }, Lifetime.SCOPED]
+            ['src/mappers/*.js', { register: asClass }, Lifetime.SCOPED],
+            ['src/jois/*.js', { register: asFunction }, Lifetime.SCOPED]
         ],
         {
             // we want `TodosService` to be registered as `todosService`.

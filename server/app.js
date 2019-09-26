@@ -17,7 +17,7 @@ const apiLimiter = rateLimit({
         'Too many accounts created from this IP, please try again after an hour'
 });
 
-module.exports = ({ db, logger, router }) => {
+module.exports = ({ db, logger, router, passportStrategy, userService }) => {
     const app = new express();
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
@@ -25,6 +25,7 @@ module.exports = ({ db, logger, router }) => {
     app.use(helmet());
     app.use(cors());
     app.use(compression());
+    app.disable('x-powered-by');
     app.sessionParser = cookieSession({
         name: 'auth-tkt',
         keys: ['key1', 'key2'],
@@ -36,8 +37,10 @@ module.exports = ({ db, logger, router }) => {
 
     app.use(passport.initialize());
     app.use(passport.session());
-    app.disable('x-powered-by');
+    passportStrategy(passport, userService);
+
     app.use(router);
+
     if (db && db.options && db.options.logging) {
         // db.options.logging = logger.info.bind(logger);
     }

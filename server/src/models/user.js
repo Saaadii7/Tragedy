@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             first: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                validate: { notNull: true }
+                validate: { notNull: true, len: [2, 225] }
             },
             last: DataTypes.STRING,
             email: {
@@ -68,6 +68,26 @@ module.exports = (sequelize, DataTypes) => {
             settings: { type: DataTypes.JSON, defaultValue: {} },
             deletedAt: {
                 type: DataTypes.DATE
+            },
+            //virtual
+            name: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                    return (
+                        this.getDataValue('first') +
+                        ' ' +
+                        this.getDataValue('last')
+                    );
+                }
+            },
+            age: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                    const diffTime = Math.abs(
+                        new Date() - new Date(this.getDataValue('dob'))
+                    );
+                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                }
             }
         },
         {
@@ -110,10 +130,8 @@ module.exports = (sequelize, DataTypes) => {
             where: { id: id }
         });
     };
+
     //instance methods
-    user.prototype.name = function() {
-        return [this.first, this.last].join(' ');
-    };
     user.prototype.authenticate = function(password) {
         return bcrypt.compare(password, this.password);
     };

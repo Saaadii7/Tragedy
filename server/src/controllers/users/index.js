@@ -1,7 +1,10 @@
 const router = require('express').Router();
 
-router.get('/', require('./all'));
-router.post('/', require('./create'));
-router.get('/:id', require('./get'));
+router
+    .get('/', require('./all'))
+    .post('/', require('./create'))
+    .get('/:id', require('./get'))
+    .put('/:id', require('./update'))
+    .delete('/:id', require('./delete'));
 
 module.exports = router;
