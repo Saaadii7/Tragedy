@@ -94,6 +94,7 @@ module.exports = (sequelize, DataTypes) => {
             tableName: 'users',
             timestamps: true,
             paranoid: true,
+            privateColumns: ['password'],
             // version: true,
             classMethods: {
                 active: async () => {

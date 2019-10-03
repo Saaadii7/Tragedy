@@ -6,6 +6,7 @@ const compression = require('compression');
 const methodOverride = require('method-override');
 const { asValue } = require('awilix');
 const { partialRight } = require('ramda');
+const auth = require('./verifyToken');
 
 module.exports = ({
     logger,
@@ -35,6 +36,9 @@ module.exports = ({
         .use('/docs', swaggerMiddleware);
 
     router.use(function(req, res, next) {
+        if (req.user) {
+            req.user.views = (req.user.views || 0) + 1;
+        }
         req.container.register({
             user: asValue(req.user) // from some authentication middleware...
         });
@@ -45,8 +49,8 @@ module.exports = ({
         return res.json('🤘 Hello SaaaDiiI 🤘');
     });
 
-    router.use('/users', require('./users'));
-    router.use('/auth', require('./auth'));
+    router.use('/auth', auth.optional, require('./auth'));
+    router.use('/users', auth.required, require('./users'));
 
     router.use(function(err, req, res, next) {
         let errors = {};

@@ -1,30 +1,36 @@
-const jwt = require('express-jwt');
-const secret = require('../../config').secret;
-function getTokenFromHeader(req) {
-    if (
-        (req.headers.authorization &&
-            req.headers.authorization.split(' ')[0] === 'Token') ||
-        (req.headers.authorization &&
-            req.headers.authorization.split(' ')[0] === 'Bearer')
-    ) {
-        return req.headers.authorization.split(' ')[1];
-    }
+// const jwt = require('express-jwt');
+// const jwt = require('jsonwebtoken');
+// const secret = require('../../config').secret;
+// function getTokenFromHeader(req) {
+//     const {
+//         headers: { authorization }
+//     } = req;
 
-    return null;
-}
+//     if (
+//         (authorization && authorization.split(' ')[0] === 'Token') ||
+//         (authorization && authorization.split(' ')[0] === 'Bearer')
+//     ) {
+//         return authorization.split(' ')[1];
+//     }
+//     return null;
+// }
 
 let auth = {
-    required: jwt({
-        secret: secret,
-        userProperty: 'payload',
-        getToken: getTokenFromHeader
-    }),
-    optional: jwt({
-        secret: secret,
-        userProperty: 'payload',
-        credentialsRequired: false,
-        getToken: getTokenFromHeader
-    })
+    required: (req, res, next) => {
+        if (req && req.user) {
+            next();
+        } else {
+            throw new Error('Unauthorized User.');
+        }
+    },
+    optional: (req, res, next) => {
+        next();
+    }
 };
-
+// jwt({
+//     secret: secret,
+//     userProperty: 'payload',
+//     credentialsRequired: false,
+//     getToken: getTokenFromHeader
+// })
 module.exports = auth;

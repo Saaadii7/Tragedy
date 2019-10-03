@@ -8,12 +8,15 @@ const envConfig = require(path.join(__dirname, 'environments', ENV));
 const dbConfig = loadDbConfig();
 const secret =
     process.env.NODE_ENV === 'production' ? process.env.SECRET : 'secret';
+
+const session_expiry = process.env.SESSION_EXPIRY;
 const config = Object.assign(
     {
         [ENV]: true,
         env: ENV,
         db: dbConfig,
-        secret
+        secret,
+        session_expiry
     },
     envConfig
 );

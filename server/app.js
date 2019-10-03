@@ -27,7 +27,7 @@ module.exports = ({ db, logger, router, passportStrategy, userService }) => {
     app.use(compression());
     app.disable('x-powered-by');
     app.sessionParser = cookieSession({
-        name: 'auth-tkt',
+        name: 'auth',
         keys: ['key1', 'key2'],
         httpOnly: false,
         maxAge: 6 * 60 * 60 * 1000

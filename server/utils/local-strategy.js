@@ -10,9 +10,7 @@ module.exports = (passport, userService) => {
                 passReqToCallback: false
             },
             async (email, password, done) => {
-                let user = await userService
-                    .findByQuery({ email: email })
-                    .catch(done);
+                let user = await userService.findByQuery({ email }).catch(done);
                 if (!user || !user.authenticate(password)) {
                     return done(null, false, {
                         errors: {

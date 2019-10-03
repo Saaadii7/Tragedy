@@ -5,7 +5,6 @@ class UserService {
         this.httpStatus = httpStatus;
     }
     async all(query = {}, offset = 0, limit = 20) {
-        console.log(this.httpStatus);
         try {
             return await this.models.user.findAll({
                 limit,
@@ -24,7 +23,6 @@ class UserService {
             let user = await this.models.user.create(obj);
             return { user, message: 'Added Successfully' };
         } catch (err) {
-            console.log(err);
             throw err;
         }
     }
@@ -37,7 +35,7 @@ class UserService {
     }
     async findByQuery(query = {}, single = true) {
         return single
-            ? await this.models.user.findOne(query)
+            ? await this.models.user.findOne({ where: query })
             : await this.models.user.find({ where: query });
     }
     async update(obj = {}, query = {}) {
