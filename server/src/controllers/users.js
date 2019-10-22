@@ -36,7 +36,6 @@ const api = makeInvoker(
                 }
             },
             get: async (req, res) => {
-                console.log(req.user);
                 let id = req.params.id;
                 try {
                     let user = await userService.findById(id);
@@ -84,6 +83,6 @@ router
     .post('/', api('create'))
     .get('/:id', api('get'))
     .put('/:id', api('update'))
-    .delete('/:id', api('update'));
+    .delete('/:id', api('delete'));
 
 module.exports = router;
