@@ -9,6 +9,7 @@ class userMapper {
             'age',
             'email',
             'dob',
+            'gender',
             'phone',
             'city',
             'country',

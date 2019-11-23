@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DATE,
                 validate: { isDate: true, isAfter: '1947-08-14' }
             },
+            gender: DataTypes.STRING,
             nationalId: {
                 type: DataTypes.STRING,
                 validate: { len: [13, 13] }

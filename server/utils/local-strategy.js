@@ -11,7 +11,7 @@ module.exports = (passport, userService) => {
             },
             async (email, password, done) => {
                 let user = await userService.findByQuery({ email }).catch(done);
-                if (!user || !user.authenticate(password)) {
+                if (!user || !(await user.authenticate(password))) {
                     return done(null, false, {
                         errors: {
                             'email or password': 'is invalid'

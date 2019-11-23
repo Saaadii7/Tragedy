@@ -5,7 +5,7 @@
     "main": "run.js",
     "private": true,
     "scripts": {
-        "start": "nodemon run.js",
+        "start": "yarn install && nodemon run.js",
         "postinstall": "yarn install --ignore-scripts"
     },
     "repository": "git+ssh://git@github.com:saadii7/Tragedy.git",
