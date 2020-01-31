@@ -12,6 +12,7 @@ class userMapper {
             'gender',
             'phone',
             'city',
+            'token',
             'country',
             'rating',
             'available',

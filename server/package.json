@@ -5,8 +5,15 @@
     "main": "run.js",
     "private": true,
     "scripts": {
-        "start": "yarn install && nodemon run.js",
-        "postinstall": "yarn install --ignore-scripts"
+        "setENV:": "cp .env.development .env",
+        "setENV:development": "cp .env.development .env",
+        "setENV:production": "cp .env.production .env",
+        "setENV:test": "cp .env.test .env",
+        "setENV:docker": "cp .env.docker .env",
+        "start": "yarn run setENV:$ENV && yarn run projectsetup && nodemon run.js",
+        "postinstall": "yarn install --ignore-scripts",
+        "dbsetup": "sequelize db:seed:all && sequelize db:migrate",
+        "projectsetup": "yarn install && cat logo.txt && yarn run dbsetup"
     },
     "repository": "git+ssh://git@github.com:saadii7/Tragedy.git",
     "author": "Saaad Mahmood",
@@ -22,7 +29,6 @@
         "@hapi/joi": "16.1.4",
         "awilix": "4.2.2",
         "awilix-express": "2.1.1",
-        "bcrypt": "3.0.6",
         "body-parser": "^1.19.0",
         "compression": "1.7.4",
         "cookie-session": "1.3.3",

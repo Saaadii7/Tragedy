@@ -4,11 +4,18 @@ const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
 const passport = require('passport');
-const cookieSession = require('cookie-session');
+
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 require('dotenv').config();
+
+if (!process.env.WHOAMI) {
+    console.log(
+        'Make a right .env file to go along, This can be a tragedy too. Taking you out!'
+    );
+    process.exit();
+}
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -26,13 +33,6 @@ module.exports = ({ db, logger, router, passportStrategy, userService }) => {
     app.use(cors());
     app.use(compression());
     app.disable('x-powered-by');
-    app.sessionParser = cookieSession({
-        name: 'auth',
-        keys: ['key1', 'key2'],
-        httpOnly: false,
-        maxAge: 6 * 60 * 60 * 1000
-    });
-    app.use(app.sessionParser);
     app.use(apiLimiter);
 
     app.use(passport.initialize());

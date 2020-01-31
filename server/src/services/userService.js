@@ -21,7 +21,7 @@ class UserService {
     async create(obj = {}) {
         try {
             let user = await this.models.user.create(obj);
-            return { user, message: 'Added Successfully' };
+            return user;
         } catch (err) {
             throw err;
         }

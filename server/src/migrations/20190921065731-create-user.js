@@ -20,14 +20,15 @@ module.exports = {
                 unique: true
             },
             password: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 allowNull: false
             },
             dob: {
                 type: Sequelize.DATE
             },
             nationalId: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                unique: true
             },
             phone: {
                 type: Sequelize.STRING

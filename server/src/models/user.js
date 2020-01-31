@@ -1,7 +1,7 @@
 'use strict';
-var bcrypt = require('bcrypt');
-var saltRounds = 16;
-
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
 module.exports = (sequelize, DataTypes) => {
     const user = sequelize.define(
         'user',
@@ -110,14 +110,16 @@ module.exports = (sequelize, DataTypes) => {
             },
             hooks: {
                 beforeCreate: function(user, options) {
-                    return bcrypt
-                        .hash(user.password, saltRounds)
-                        .then(function(hash) {
-                            user.password = hash;
-                        })
-                        .catch(function(err) {
-                            throw new Error(err);
-                        });
+                    user.password = crypto
+                        .pbkdf2Sync(
+                            user.password,
+                            config.web.secret,
+                            10000,
+                            512,
+                            'sha512'
+                        )
+                        .toString('hex');
+                    return user;
                 }
             }
         }
@@ -134,8 +136,31 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     //instance methods
-    user.prototype.authenticate = function(password) {
-        return bcrypt.compare(password, this.password);
+    user.prototype.generateJWT = function() {
+        const today = new Date();
+        const expirationDate = new Date(today);
+        expirationDate.setDate(today.getDate() + config.web.session_expiry);
+        return jwt.sign(
+            {
+                email: this.email,
+                id: this.id,
+                exp: parseInt(expirationDate.getTime() / 1000, 10)
+            },
+            config.web.secret
+        );
+    };
+    user.prototype.toAuthJSON = function() {
+        return {
+            id: this.id,
+            email: this.email,
+            token: this.generateJWT()
+        };
+    };
+    user.prototype.authenticate = async function(password) {
+        const hash = crypto
+            .pbkdf2Sync(password, config.web.secret, 10000, 512, 'sha512')
+            .toString('hex');
+        return this.password === hash;
     };
     return user;
 };

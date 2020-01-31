@@ -7,40 +7,40 @@ const api = makeInvoker(
     ({ userService, httpStatus, userMapper, userSchema }) => {
         return {
             login: async (req, res, next) => {
-                passport.authenticate('local', function(err, user, info) {
-                    if (err) {
-                        return next(err);
-                    }
-                    if (!user) {
-                        return res.status(400).json({ success: false });
-                        // return next('User not found');
-                    }
-                    req.logIn(user, async err => {
+                passport.authenticate(
+                    'local',
+                    { session: false },
+                    async function(err, user) {
                         if (err) {
                             return next(err);
                         }
+                        if (!user) {
+                            return res.status(400).json({
+                                success: false,
+                                message: 'No User found with these credentials.'
+                            });
+                        }
+                        // req.logIn(user, async err => {
+                        if (err) {
+                            return next(err);
+                        }
+                        user.token = user.generateJWT();
                         await userService.update(
                             { available: true },
-                            { id: req.user.id }
+                            { id: user.id }
                         );
                         return res
                             .status(httpStatus.OK)
                             .send(userMapper.map(user));
-                    });
-                })(req, res, next);
+                        // });
+                    }
+                )(req, res, next);
             },
             logout: async (req, res) => {
-                if (!req.user) {
-                    return res
-                        .status(httpStatus.OK)
-                        .send({ message: 'User already logged out' });
-                }
                 await userService.update(
                     { available: false },
                     { id: req.user.id }
                 );
-                req.logout();
-                res.clearCookie();
                 return res
                     .status(httpStatus.OK)
                     .send({ message: 'User logged out successfully' });
@@ -51,9 +51,10 @@ const api = makeInvoker(
                 if (error) {
                     throw new Error(error);
                 }
-                return res
-                    .status(httpStatus.CREATED)
-                    .send(userMapper.map(await userService.create(value)));
+                return res.status(httpStatus.CREATED).send({
+                    message: 'Added Successfully',
+                    user: userMapper.map(await userService.create(value))
+                });
             }
         };
     }

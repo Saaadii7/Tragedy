@@ -1,0 +1,27 @@
+version: '3'
+services:
+    node:
+        build:
+            context: ./server
+            dockerfile: Dockerfile
+        volumes:
+            - ./server:/usr/src/app/
+        ports:
+            - '7070:7777'
+        environment:
+            WHOAMI: IAMTRAGEDY
+            SECRET: 'Tragedy'
+            SERVER_PORT: 7777
+            NODE_ENV: 'docker'
+            DB_HOST: 172.17.0.1
+            DB_PORT: 6543
+            DB_USERNAME: saaad
+            DB_PASSWORD: root
+            DB_NAME: tragedy
+            DB_DAILECT: postgres
+            STORAGE_PATH: './uploads'
+            SESSION_EXPIRY: 1
+        # links:
+        #     - db:db
+        # depends_on:
+        #     - db

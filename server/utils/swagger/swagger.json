@@ -1,1 +1,35 @@
-{}
+{
+    "openapi": "3.0.0",
+    "info": {
+        "name": "Tragedy",
+        "description": "Only Tragedy will survive.",
+        "version": "3.0.0",
+        "uptime": 101
+    },
+    "servers": [
+        {
+            "url": "http://localhost:7777",
+            "description": "Localserver"
+        },
+        {
+            "url": "{protocol}://tragedy.com",
+            "description": "Tragedy Server",
+            "variables": [
+                {
+                    "protocol": {
+                        "enum": ["http", "https"],
+                        "default": "https"
+                    }
+                }
+            ]
+        }
+    ],
+    "basePath": "/",
+    "schemes": ["http", "https"],
+    "paths": {
+        "/": {
+            "description": "Connection home page",
+            "get": { "summary": "Get API Version Information" }
+        }
+    }
+}

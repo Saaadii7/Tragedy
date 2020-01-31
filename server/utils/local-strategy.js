@@ -12,11 +12,13 @@ module.exports = (passport, userService) => {
             async (email, password, done) => {
                 let user = await userService.findByQuery({ email }).catch(done);
                 if (!user || !(await user.authenticate(password))) {
-                    return done(null, false, {
-                        errors: {
-                            'email or password': 'is invalid'
-                        }
-                    });
+                    return done(
+                        {
+                            name: 'Invalid credentials',
+                            message: 'Email or Password is incorrect.'
+                        },
+                        false
+                    );
                 }
                 return done(null, user);
             }
